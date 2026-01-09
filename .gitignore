@@ -1,0 +1,17 @@
+# Dataset (download from Kaggle)
+data/
+
+# Model weights (too large)
+models/*.pth
+models/*.pt
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+...
