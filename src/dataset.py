@@ -1,15 +1,19 @@
 import torch
-import torchvision.transforms as transforms
+import torchvision.transforms.v2 as transforms
 from torch.utils.data import Dataset
 from PIL import Image
 import os
 
 
-# Create transform pipeline using Compose
+# Transform pipeline with data augmentation
 transform_pipeline = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.Grayscale(),
+    transforms.RandomRotation(10),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.RandomAffine(degrees=(-90, 90), translate=(0.1, 0.1), scale=(0.8, 1.2), shear=(-10, 10)),
     transforms.ToTensor(),
+    transforms.GaussianNoise(mean=0.0, sigma=0.1),
     transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
