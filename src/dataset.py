@@ -6,6 +6,9 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import os
 
+#Transform image into tensor
+to_tensor = transforms.ToTensor()
+
 # Create a transform that resizes images to 224x224
 resize_transform = T.Resize((224, 224))
 
@@ -23,6 +26,7 @@ for filename in filenames:
     img_loc = Image.open(full_path)
     resize_img = resize_transform(img_loc)
     transform_img = transform(resize_img)
+    tensor_img = to_tensor(transform_img)
 
 # Process train/fake folder
 filenames = os.listdir("data/train/fake")
@@ -35,6 +39,7 @@ for filename in filenames:
     img_loc = Image.open(full_path)
     resize_img = resize_transform(img_loc)
     transform_img = transform(resize_img)
+    tensor_img = to_tensor(transform_img)
 
 # Process test/real folder
 filenames = os.listdir("data/test/real")
@@ -47,6 +52,7 @@ for filename in filenames:
     img_loc = Image.open(full_path)
     resize_img = resize_transform(img_loc)
     transform_img = transform(resize_img)
+    tensor_img = to_tensor(transform_img)
 
 # Process test/fake folder
 filenames = os.listdir("data/test/fake")
@@ -59,3 +65,4 @@ for filename in filenames:
     img_loc = Image.open(full_path)
     resize_img = resize_transform(img_loc)
     transform_img = transform(resize_img)
+    tensor_img = to_tensor(transform_img)
