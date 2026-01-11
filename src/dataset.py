@@ -1,6 +1,6 @@
 import torch
 import torchvision.transforms.v2 as transforms
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 import os
 
