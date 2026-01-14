@@ -5,7 +5,7 @@ import torch
 full_train_dataset = SignatureDataset("data/train")
 
 train_split = int(0.8 * len(full_train_dataset))
-val_split = int(0.2 * len(full_train_dataset))
+val_split = len(full_train_dataset) - train_split
 
 train_dataset, val_dataset = random_split(full_train_dataset, [train_split, val_split])
 

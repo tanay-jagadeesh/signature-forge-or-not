@@ -8,13 +8,13 @@ import os
 # Transform pipeline with data augmentation
 transform_pipeline = transforms.Compose([
     transforms.Resize((224, 224)),
-    transforms.Grayscale(),
+    transforms.Grayscale(num_output_channels=3),
     transforms.RandomRotation(10),
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomAffine(degrees=(-90, 90), translate=(0.1, 0.1), scale=(0.8, 1.2), shear=(-10, 10)),
     transforms.ToTensor(),
     transforms.GaussianNoise(mean=0.0, sigma=0.1),
-    transforms.Normalize(mean=[0.5], std=[0.5])
+    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
 ])
 
 class SignatureDataset(Dataset):
