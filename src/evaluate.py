@@ -53,3 +53,27 @@ def calculate_metrics(y_true, y_pred):
     print(f"F1-Score:  {f1:.4f}")
 
     return accuracy, precision, recall, f1
+#Visuals
+def plot_confusion_matrix(y_true, y_pred, save_path='confusion_matrix.png'):
+    cm = confusion_matrix(y_true, y_pred)
+
+    plt.figure(figsize=(8, 6))
+
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=['Real', 'Fake'],
+                yticklabels=['Real', 'Fake'])
+
+    plt.title('Confusion Matrix', fontsize=16, pad=20)
+    plt.ylabel('True Label', fontsize=12)
+    plt.xlabel('Predicted Label', fontsize=12)
+
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    print(f"\nConfusion matrix saved to {save_path}")
+
+    plt.close()
+
+    print("\nConfusion Matrix Breakdown:")
+    print(f"True Negatives (Real as Real):   {cm[0, 0]}")
+    print(f"False Positives (Real as Fake):  {cm[0, 1]}")
+    print(f"False Negatives (Fake as Real):  {cm[1, 0]}")
+    print(f"True Positives (Fake as Fake):   {cm[1, 1]}")
