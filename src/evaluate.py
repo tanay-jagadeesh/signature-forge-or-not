@@ -33,9 +33,23 @@ def get_predictions(model, test_loader):
 
             probabilities = torch.softmax(outputs, dim = 1)
 
-            _, predicted = torch.max(outputs, 1)
+            _,predicted = torch.max(outputs, 1)
 
             all_predictions.extend(predicted.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
             all_probs.extend(probabilities[:, 1].cpu().numpy())
     return np.array(all_predictions), np.array(all_labels), np.array(all_probs)
+
+def calculate_metrics(y_true, y_pred):
+    accuracy = accuracy_score(y_true, y_pred)
+    precision = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+    f1 = f1_score(y_true, y_pred)
+
+    print("EVALUATION METRICS")
+    print(f"Accuracy:  {accuracy:.4f} ({accuracy*100:.2f}%)")
+    print(f"Precision: {precision:.4f} ({precision*100:.2f}%)")
+    print(f"Recall:    {recall:.4f} ({recall*100:.2f}%)")
+    print(f"F1-Score:  {f1:.4f}")
+
+    return accuracy, precision, recall, f1
