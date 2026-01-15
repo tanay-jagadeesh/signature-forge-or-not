@@ -101,6 +101,58 @@ def plot_roc_curve(y_true, y_probabilities, save_path='roc_curve.png'):
 
     return roc_auc
 
+def visualize_errors(model, test_loader, num_samples=10, save_path='error_analysis.png'):
+    model.eval()
+    errors = []
+
+    with torch.no_grad():
+        for images, labels in test_loader:
+            outputs = model(images)
+            probabilities = torch.softmax(outputs, dim=1)
+            _, predicted = torch.max(outputs, 1)
+
+            for i in range(len(labels)):
+                if predicted[i] != labels[i]:
+                    errors.append({
+                        'image': images[i],
+                        'true': labels[i].item(),
+                        'pred': predicted[i].item(),
+                        'conf': probabilities[i, predicted[i]].item()
+                    })
+
+    if len(errors) == 0:
+        print("\nNo errors found - perfect accuracy!")
+        return
+
+    print(f"\nFound {len(errors)} misclassified images")
+
+    num_to_show = min(num_samples, len(errors))
+    fig, axes = plt.subplots(2, 5, figsize=(15, 6))
+    axes = axes.flatten()
+
+    for idx in range(num_to_show):
+        img = errors[idx]['image'].permute(1, 2, 0).cpu().numpy()
+        img = (img * 0.5) + 0.5
+        img = np.clip(img, 0, 1)
+
+        axes[idx].imshow(img, cmap='gray')
+        axes[idx].axis('off')
+
+        true_label = 'Real' if errors[idx]['true'] == 0 else 'Fake'
+        pred_label = 'Real' if errors[idx]['pred'] == 0 else 'Fake'
+        conf = errors[idx]['conf']
+
+        axes[idx].set_title(f'True: {true_label}\nPred: {pred_label}\nConf: {conf:.2f}',
+                          fontsize=9, color='red', weight='bold')
+
+    for idx in range(num_to_show, 10):
+        axes[idx].axis('off')
+
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    print(f"Error analysis saved to {save_path}")
+    plt.close()
+
 def main(model_path='best_model.pth'):
     print("Starting evaluation")
     print(f"Loading model from: {model_path}\n")
@@ -116,12 +168,15 @@ def main(model_path='best_model.pth'):
 
     roc_auc = plot_roc_curve(y_true, y_probs)
 
+    visualize_errors(model, test_loader)
+
     print("Evaluation Results")
     print(f"Final Accuracy: {accuracy*100:.2f}%")
     print(f"AUC Score: {roc_auc:.4f}")
     print("\nGenerated files:")
     print("confusion_matrix.png")
     print("roc_curve.png")
+    print("error_analysis.png")
 
 if __name__ == "__main__":
     main(model_path='best_model.pth')
