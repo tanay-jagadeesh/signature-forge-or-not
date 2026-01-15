@@ -15,14 +15,11 @@ for param in model.bn1.parameters():
 
 for param in model.layer1.parameters():
     param.requires_grad = False
-    
+
 for param in model.layer2.parameters():
     param.requires_grad = False
-    
+
 for param in model.layer3.parameters():
-    param.requires_grad = False
-    
-for param in model.layer4.parameters():
     param.requires_grad = False
 
 # Get the number of input features for the original final layer
@@ -34,12 +31,12 @@ model.fc = nn.Linear(num_ftrs, 2)
 #built-in loss function
 criterion = nn.CrossEntropyLoss()
 
-#optimizer
-optimizer = torch.optim.Adam(model.parameters(), lr = 0.001)
+#optimizer (increased lr for better convergence)
+optimizer = torch.optim.Adam(model.parameters(), lr = 0.01)
 
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
-num_epochs = 20
+num_epochs = 40
 
 model.train()
 
