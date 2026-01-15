@@ -21,3 +21,21 @@ def load_model(model_path = 'best_model.pth'):
     model.eval()
 
     return model
+
+def get_predictions(model, test_loader):
+    all_predictions = []
+    all_labels = []
+    all_probs = []
+
+    with torch.no_grad():
+        for images, labels in test_loader:
+            outputs = model(images)
+
+            probabilities = torch.softmax(outputs, dim = 1)
+
+            _, predicted = torch.max(outputs, 1)
+
+            all_predictions.extend(predicted.cpu().numpy())
+            all_labels.extend(labels.cpu().numpy())
+            all_probs.extend(probabilities[:, 1].cpu().numpy())
+    return np.array(all_predictions), np.array(all_labels), np.array(all_probs)
