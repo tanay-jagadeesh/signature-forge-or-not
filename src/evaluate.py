@@ -100,3 +100,28 @@ def plot_roc_curve(y_true, y_probabilities, save_path='roc_curve.png'):
     plt.close()
 
     return roc_auc
+
+def main(model_path='best_model.pth'):
+    print("Starting evaluation")
+    print(f"Loading model from: {model_path}\n")
+
+    model = load_model(model_path)
+
+    print("Running predictions on test set")
+    y_pred, y_true, y_probs = get_predictions(model, test_loader)
+
+    accuracy, precision, recall, f1 = calculate_metrics(y_true, y_pred)
+
+    plot_confusion_matrix(y_true, y_pred)
+
+    roc_auc = plot_roc_curve(y_true, y_probs)
+
+    print("Evaluation Results")
+    print(f"Final Accuracy: {accuracy*100:.2f}%")
+    print(f"AUC Score: {roc_auc:.4f}")
+    print("\nGenerated files:")
+    print("confusion_matrix.png")
+    print("roc_curve.png")
+
+if __name__ == "__main__":
+    main(model_path='best_model.pth')
