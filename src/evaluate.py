@@ -77,3 +77,26 @@ def plot_confusion_matrix(y_true, y_pred, save_path='confusion_matrix.png'):
     print(f"False Positives (Real as Fake):  {cm[0, 1]}")
     print(f"False Negatives (Fake as Real):  {cm[1, 0]}")
     print(f"True Positives (Fake as Fake):   {cm[1, 1]}")
+
+def plot_roc_curve(y_true, y_probabilities, save_path='roc_curve.png'):
+    fpr, tpr, thresholds = roc_curve(y_true, y_probabilities)
+    roc_auc = auc(fpr, tpr)
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {roc_auc:.4f})')
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--', label='Random Classifier')
+
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate', fontsize=12)
+    plt.ylabel('True Positive Rate', fontsize=12)
+    plt.title('ROC Curve', fontsize=16, pad=20)
+    plt.legend(loc="lower right", fontsize=10)
+    plt.grid(alpha=0.3)
+
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    print(f"\nROC curve saved to {save_path}")
+    print(f"AUC Score: {roc_auc:.4f}")
+    plt.close()
+
+    return roc_auc
